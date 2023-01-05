@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
 function App() {
   const kanjis = [
@@ -54,20 +54,47 @@ function App() {
     updateKanjiPrompt();
   }
 
+  function KanjiPrompt(props) {
+    return <p className="kanjiPrompt">{props.kanjiPrompt.slug}</p>;
+  }
+
+  function AnswerResult(props) {
+    return <div>{props.result !== "NA" ? 
+      props.result === "CORRECT" 
+      ? "Correct!" 
+      : "Wrong!" 
+      : ""}
+      </div>
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>{kanjiPrompt.slug}</p>
-
-        <form onSubmit={handleSubmit}>
-          <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}/>
-          <input type="submit" value="Submit"/>
-        </form>
-
-        {answerResult !== "NA" ? answerResult === "CORRECT" ? <p>Correct!</p> : <p>Wrong!</p> : <p></p>}
-
-      </header>
-    </div>
+    <Container fluid className='App'>
+      <Row>
+        <Col></Col>
+      </Row>
+      <Row>
+        <Col className='App-body'>
+          <Row>
+            <Col><KanjiPrompt kanjiPrompt={kanjiPrompt}/></Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form onSubmit={handleSubmit}>
+                <Form.Control as="input" type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}/>
+                <Button onClick={handleSubmit}>&gt;</Button>
+              </Form>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <AnswerResult result={answerResult} />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      
+    
+    </Container>
   );
 }
 
