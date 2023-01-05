@@ -16,8 +16,6 @@ body {
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  
-  
 }
 
 .score {
@@ -34,7 +32,7 @@ input[type="text"] {
   margin: 8px 0;
   /* box-sizing: border-box; */
 
-  background-color: #282c34;
+  background-color: inherit;
   color: white;
   text-align: center;
 
@@ -45,14 +43,10 @@ input[type="text"] {
   outline-width: 0px;
 }
 
-input[type="text"]:focus {
-  background-color: #282c34;
+.correct {
+  background-color: #65a25d !important;
 }
 
-input[type="text"].correct {
-  background-color: #65a25d;
-}
-
-input[type="text"].wrong {
-  background-color: #b91a1a;
+.wrong {
+  background-color: #b91a1a !important;
 }

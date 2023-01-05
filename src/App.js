@@ -22,6 +22,8 @@ function App() {
     }
   ];
 
+  const [appState, setAppState] = useState("WAITING_RESPONSE");
+
   const [kanjiPrompt, setKanjiPrompt] = useState("EMPTY");
   const [userAnswer, setUserAnswer] = useState("");
   const [answerResult, setAnswerResult] = useState("NA");
@@ -49,13 +51,19 @@ function App() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (userAnswer.toLowerCase() === kanjiPrompt.meaning.toLowerCase()) {
-      setAnswerResult("CORRECT")
+    if (appState === "WAITING_RESPONSE") {
+      if (userAnswer.toLowerCase() === kanjiPrompt.meaning.toLowerCase()) {
+        setAnswerResult("CORRECT");
+      } else {
+        setAnswerResult("WRONG");
+      }
+      setAppState("ANSWERED");
     } else {
-      setAnswerResult("WRONG")
+      setAppState("WAITING_RESPONSE");
+      setUserAnswer("");
+      updateKanjiPrompt();
     }
-    setUserAnswer("");
-    updateKanjiPrompt();
+    
   }
 
   function KanjiPrompt(props) {
@@ -67,7 +75,7 @@ function App() {
   }
 
   function AnswerResult(props) {
-    return <div>{props.result !== "NA" ? 
+    return <div>{props.currentState === "ANSWERED" ? 
       props.result === "CORRECT" 
       ? "Correct!" 
       : kanjiPrompt.meaning
@@ -90,7 +98,8 @@ function App() {
           <Row>
             <Col>
               <Form onSubmit={handleSubmit} autoComplete="off">
-                <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange} />
+                <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}
+                  className={appState === "ANSWERED" ? answerResult === "CORRECT" ? 'correct' : 'wrong' : ''} />
                 {/* <AnswerInput onChange={handleOnInputChange}/> */}
                 {/* <Button onClick={handleSubmit}>&gt;</Button> */}
               </Form>
@@ -98,7 +107,7 @@ function App() {
           </Row>
           <Row>
             <Col>
-              <AnswerResult result={answerResult} />
+              <AnswerResult currentState={appState} result={answerResult} />
             </Col>
           </Row>
         </Col>
