@@ -1,42 +1,35 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Col, Container, Form, Row } from 'react-bootstrap';
+import raw from './kanji_01.json';
 
 function App() {
-  const kanjis = [
-    {
-      "slug": "一",
-      "meaning": "One",
-    },
-    {
-      "slug": "二",
-      "meaning": "Two",
-    },
-    {
-      "slug": "三",
-      "meaning": "Three",
-    },
-    {
-      "slug": "四",
-      "meaning": "Four",
-    }
-  ];
-
   const [appState, setAppState] = useState("WAITING_RESPONSE");
-
-  const [kanjiPrompt, setKanjiPrompt] = useState("EMPTY");
+  const [kanjis] = useState([]);
+  const [kanjiPrompt, setKanjiPrompt] = useState();
   const [userAnswer, setUserAnswer] = useState("");
   const [answerResult, setAnswerResult] = useState("NA");
+
+  function loadKanjiDictionary() {
+    if (kanjis.length === 0) {
+      raw['data'].forEach(kanji => {
+        kanjis.push(kanji);
+      });
+      console.log('Loaded', kanjis.length, 'kanjis');
+    }
+  }
 
   function getNextKanjiPrompt() {
     return kanjis[Math.floor(Math.random() * kanjis.length)];
   };
 
   const updateKanjiPrompt = () => {
+    console.log("kanjis length:", kanjis.length);
     setKanjiPrompt(getNextKanjiPrompt());
   };
   
   useEffect(() => {
+    loadKanjiDictionary();
     updateKanjiPrompt();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -49,10 +42,16 @@ function App() {
       setUserAnswer(event.target.value);
   }
 
+  function getAcceptedMeanings(kanjiPrompt) {
+    return kanjiPrompt['data']['meanings']
+      .filter(meaning => meaning.accepted_answer)
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     if (appState === "WAITING_RESPONSE") {
-      if (userAnswer.toLowerCase() === kanjiPrompt.meaning.toLowerCase()) {
+      const accepted_meanings = getAcceptedMeanings(kanjiPrompt).map(meaning => meaning['meaning'].toLowerCase());
+      if (accepted_meanings.includes(userAnswer.toLowerCase())) {
         setAnswerResult("CORRECT");
       } else {
         setAnswerResult("WRONG");
@@ -67,18 +66,18 @@ function App() {
   }
 
   function KanjiPrompt(props) {
-    return <p className="kanjiPrompt">{props.kanjiPrompt.slug}</p>;
+    return <p className="kanjiPrompt">{props.kanjiPrompt['data']['slug']}</p>;
   }
 
-  function AnswerInput(props) {
-    return <input type="text" id="answer" value={userAnswer} onChange={props.onChange} />;
-  }
+  // function AnswerInput(props) {
+  //   return <input type="text" id="answer" value={userAnswer} onChange={props.onChange} />;
+  // }
 
   function AnswerResult(props) {
     return <div>{props.currentState === "ANSWERED" ? 
       props.result === "CORRECT" 
       ? "Correct!" 
-      : kanjiPrompt.meaning
+      : getAcceptedMeanings(kanjiPrompt).filter(meaning => meaning.primary)[0]['meaning']
       : ""}
       </div>
   }
@@ -93,7 +92,9 @@ function App() {
       <Row>
         <Col className='App-body'>
           <Row>
-            <Col><KanjiPrompt kanjiPrompt={kanjiPrompt}/></Col>
+            <Col>
+              {kanjiPrompt && <KanjiPrompt kanjiPrompt={kanjiPrompt}/>}
+            </Col>
           </Row>
           <Row>
             <Col>
