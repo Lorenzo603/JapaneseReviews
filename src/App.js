@@ -39,6 +39,10 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function Score(props) {
+    return <div className='score'>2/10</div>
+  }
+
   function handleOnInputChange(event) {
       setUserAnswer(event.target.value);
   }
@@ -58,11 +62,15 @@ function App() {
     return <p className="kanjiPrompt">{props.kanjiPrompt.slug}</p>;
   }
 
+  function AnswerInput(props) {
+    return <input type="text" id="answer" value={userAnswer} onChange={props.onChange} />;
+  }
+
   function AnswerResult(props) {
     return <div>{props.result !== "NA" ? 
       props.result === "CORRECT" 
       ? "Correct!" 
-      : "Wrong!" 
+      : kanjiPrompt.meaning
       : ""}
       </div>
   }
@@ -70,7 +78,9 @@ function App() {
   return (
     <Container fluid className='App'>
       <Row>
-        <Col></Col>
+        <Col>
+          <Score />
+        </Col>
       </Row>
       <Row>
         <Col className='App-body'>
@@ -79,9 +89,10 @@ function App() {
           </Row>
           <Row>
             <Col>
-              <Form onSubmit={handleSubmit}>
-                <Form.Control as="input" type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}/>
-                <Button onClick={handleSubmit}>&gt;</Button>
+              <Form onSubmit={handleSubmit} autoComplete="off">
+                <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange} />
+                {/* <AnswerInput onChange={handleOnInputChange}/> */}
+                {/* <Button onClick={handleSubmit}>&gt;</Button> */}
               </Form>
             </Col>
           </Row>
