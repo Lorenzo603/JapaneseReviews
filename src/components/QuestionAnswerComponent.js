@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Col, Container, Form, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 
 
 export const QuestionAnswerComponent = (props) => {
@@ -88,39 +88,39 @@ export const QuestionAnswerComponent = (props) => {
       }
     
       return (
-        <Container fluid className='App'>
-          <Row>
+        <Row>
             <Col>
-              <Score />
+                <Row>
+                    <Col>
+                    <Score />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className='App-body'>
+                    <Row>
+                        <Col>
+                        {kanjiPrompt && <KanjiPrompt kanjiPrompt={kanjiPrompt}/>}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                        <Form onSubmit={handleSubmit} autoComplete="off">
+                            <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}
+                            className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
+                            {/* <AnswerInput onChange={handleOnInputChange}/> */}
+                            {/* <Button onClick={handleSubmit}>&gt;</Button> */}
+                        </Form>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                        <AnswerResult currentState={answerState} result={answerResult} />
+                        </Col>
+                    </Row>
+                    </Col>
+                </Row>
             </Col>
-          </Row>
-          <Row>
-            <Col className='App-body'>
-              <Row>
-                <Col>
-                  {kanjiPrompt && <KanjiPrompt kanjiPrompt={kanjiPrompt}/>}
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Form onSubmit={handleSubmit} autoComplete="off">
-                    <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}
-                      className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
-                    {/* <AnswerInput onChange={handleOnInputChange}/> */}
-                    {/* <Button onClick={handleSubmit}>&gt;</Button> */}
-                  </Form>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <AnswerResult currentState={answerState} result={answerResult} />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          
-        
-        </Container>
+        </Row>
       );
 };
 
