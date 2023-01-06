@@ -4,13 +4,26 @@ import { Col, Container, Form, Row } from 'react-bootstrap';
 import raw from './kanji_01.json';
 
 function App() {
-  const [appState, setAppState] = useState("WAITING_RESPONSE");
+  const Result = {
+    CORRECT: 0,
+    WRONG: 1,
+    NA: 2,
+  };
+
+  const AnswerState = {
+    WAITING_RESPONSE: 0,
+    ANSWERED: 1,
+  };
+
+  const [answerState, setAnswerState] = useState(AnswerState.WAITING_RESPONSE);
   const [kanjis] = useState([]);
   const [kanjiPrompt, setKanjiPrompt] = useState();
   const [userAnswer, setUserAnswer] = useState("");
-  const [answerResult, setAnswerResult] = useState("NA");
+  const [answerResult, setAnswerResult] = useState(Result.NA);
   const [totalAnswers, setTotalAnswers] = useState(0);
   const [totalCorrect, setTotalCorrect] = useState(0);
+
+
 
   function loadKanjiDictionary() {
     if (kanjis.length === 0) {
@@ -52,18 +65,18 @@ function App() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (appState === "WAITING_RESPONSE") {
+    if (answerState === AnswerState.WAITING_RESPONSE) {
       const accepted_meanings = getAcceptedMeanings(kanjiPrompt).map(meaning => meaning['meaning'].toLowerCase());
       if (accepted_meanings.includes(userAnswer.toLowerCase())) {
-        setAnswerResult("CORRECT");
+        setAnswerResult(Result.CORRECT);
         setTotalCorrect(totalCorrect + 1);
       } else {
-        setAnswerResult("WRONG");
+        setAnswerResult(Result.WRONG);
       }
-      setAppState("ANSWERED");
+      setAnswerState(AnswerState.ANSWERED);
       setTotalAnswers(totalAnswers + 1);
     } else {
-      setAppState("WAITING_RESPONSE");
+      setAnswerState(AnswerState.WAITING_RESPONSE);
       setUserAnswer("");
       updateKanjiPrompt();
     }
@@ -79,8 +92,8 @@ function App() {
   // }
 
   function AnswerResult(props) {
-    return <div className='answer-result'>{props.currentState === "ANSWERED" ? 
-      props.result === "CORRECT" 
+    return <div className='answer-result'>{props.currentState === AnswerState.ANSWERED ? 
+      props.result === Result.CORRECT
       ? "Correct!" 
       : getAcceptedMeanings(kanjiPrompt).filter(meaning => meaning.primary)[0]['meaning']
       : ""}
@@ -105,7 +118,7 @@ function App() {
             <Col>
               <Form onSubmit={handleSubmit} autoComplete="off">
                 <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}
-                  className={appState === "ANSWERED" ? answerResult === "CORRECT" ? 'correct' : 'wrong' : ''} />
+                  className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
                 {/* <AnswerInput onChange={handleOnInputChange}/> */}
                 {/* <Button onClick={handleSubmit}>&gt;</Button> */}
               </Form>
@@ -113,7 +126,7 @@ function App() {
           </Row>
           <Row>
             <Col>
-              <AnswerResult currentState={appState} result={answerResult} />
+              <AnswerResult currentState={answerState} result={answerResult} />
             </Col>
           </Row>
         </Col>
