@@ -20,21 +20,24 @@ body {
 
 .score {
   text-align: right;
+  font-size: x-large;
 }
 
 .kanjiPrompt {
-  font-size: xx-large;
+  font-size: 8rem;
 }
 
 input[type="text"] {
   width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
+  padding: 1rem 2rem;
+  margin-bottom: 1rem;
   /* box-sizing: border-box; */
 
   background-color: inherit;
   color: white;
   text-align: center;
+
+  font-size: 2rem;
 
   border: none;
   outline: 0 none;
@@ -49,4 +52,9 @@ input[type="text"] {
 
 .wrong {
   background-color: #b91a1a !important;
+}
+
+.answer-result {
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
 }

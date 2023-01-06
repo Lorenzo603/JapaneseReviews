@@ -9,6 +9,8 @@ function App() {
   const [kanjiPrompt, setKanjiPrompt] = useState();
   const [userAnswer, setUserAnswer] = useState("");
   const [answerResult, setAnswerResult] = useState("NA");
+  const [totalAnswers, setTotalAnswers] = useState(0);
+  const [totalCorrect, setTotalCorrect] = useState(0);
 
   function loadKanjiDictionary() {
     if (kanjis.length === 0) {
@@ -34,8 +36,9 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function Score(props) {
-    return <div className='score'>2/10</div>
+  function Score() {
+    const percentage = totalAnswers === 0 ? 0 : Math.round(totalCorrect/totalAnswers * 100, 2);
+    return <div className='score'><span>{totalCorrect}/{totalAnswers}</span> <span>({percentage} %)</span></div>
   }
 
   function handleOnInputChange(event) {
@@ -53,10 +56,12 @@ function App() {
       const accepted_meanings = getAcceptedMeanings(kanjiPrompt).map(meaning => meaning['meaning'].toLowerCase());
       if (accepted_meanings.includes(userAnswer.toLowerCase())) {
         setAnswerResult("CORRECT");
+        setTotalCorrect(totalCorrect + 1);
       } else {
         setAnswerResult("WRONG");
       }
       setAppState("ANSWERED");
+      setTotalAnswers(totalAnswers + 1);
     } else {
       setAppState("WAITING_RESPONSE");
       setUserAnswer("");
@@ -74,7 +79,7 @@ function App() {
   // }
 
   function AnswerResult(props) {
-    return <div>{props.currentState === "ANSWERED" ? 
+    return <div className='answer-result'>{props.currentState === "ANSWERED" ? 
       props.result === "CORRECT" 
       ? "Correct!" 
       : getAcceptedMeanings(kanjiPrompt).filter(meaning => meaning.primary)[0]['meaning']
