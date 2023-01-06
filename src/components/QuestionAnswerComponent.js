@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+import { Col, Form, Row, Button } from 'react-bootstrap';
 
 
 export const QuestionAnswerComponent = (props) => {
@@ -12,6 +12,7 @@ export const QuestionAnswerComponent = (props) => {
       const AnswerState = {
         WAITING_RESPONSE: 0,
         ANSWERED: 1,
+        FINISHED: 2,
       };
     
       const [answerState, setAnswerState] = useState(AnswerState.WAITING_RESPONSE);
@@ -21,6 +22,7 @@ export const QuestionAnswerComponent = (props) => {
       const [totalAnswers, setTotalAnswers] = useState(0);
       const [totalCorrect, setTotalCorrect] = useState(0);
       const [remainingPrompts] = useState([]);
+      const [wrongAnswers] = useState([]);
     
     
       function getNextKanjiPrompt() {
@@ -30,7 +32,7 @@ export const QuestionAnswerComponent = (props) => {
       const updateKanjiPrompt = () => {
         console.log("kanjis pool length:", remainingPrompts.length);
         if (remainingPrompts.length === 0) {
-            // TODO session over
+            setAnswerState(AnswerState.FINISHED);
         } else {
             setKanjiPrompt(getNextKanjiPrompt());
         }
@@ -46,8 +48,8 @@ export const QuestionAnswerComponent = (props) => {
       useEffect(() => {
         if (remainingPrompts.length === 0) {
           remainingPrompts.push(...shuffle(props.kanjis));
+          updateKanjiPrompt();
         }
-        updateKanjiPrompt();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
     
@@ -74,6 +76,7 @@ export const QuestionAnswerComponent = (props) => {
             setTotalCorrect(totalCorrect + 1);
           } else {
             setAnswerResult(Result.WRONG);
+            wrongAnswers.push(kanjiPrompt);
           }
           setAnswerState(AnswerState.ANSWERED);
           setTotalAnswers(totalAnswers + 1);
@@ -101,6 +104,38 @@ export const QuestionAnswerComponent = (props) => {
           : ""}
           </div>
       }
+
+      function WrongAnswersRecap() {
+          return (
+            <ul>
+                {wrongAnswers.map(wrongAnswer =>
+                    <li key={wrongAnswer['id']}>{wrongAnswer['data']['slug']}: 
+                    {getAcceptedMeanings(wrongAnswer).map(meaning => meaning['meaning']).join(', ')}</li>
+                )}
+            </ul>
+          );
+      }
+
+      function FinalResult() {
+          return (
+            <Row>
+                <Col>
+                    <Row>
+                        <Col>
+                            <WrongAnswersRecap/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Button>
+                                Go back
+                            </Button>
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+          );
+      }
     
       return (
         <Row>
@@ -112,26 +147,27 @@ export const QuestionAnswerComponent = (props) => {
                 </Row>
                 <Row>
                     <Col className='App-body'>
-                    <Row>
-                        <Col>
-                        {kanjiPrompt && <KanjiPrompt kanjiPrompt={kanjiPrompt}/>}
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                        <Form onSubmit={handleSubmit} autoComplete="off">
-                            <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}
-                            className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
-                            {/* <AnswerInput onChange={handleOnInputChange}/> */}
-                            {/* <Button onClick={handleSubmit}>&gt;</Button> */}
-                        </Form>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                        <AnswerResult currentState={answerState} result={answerResult} />
-                        </Col>
-                    </Row>
+                        <Row>
+                            <Col>
+                            {kanjiPrompt && <KanjiPrompt kanjiPrompt={kanjiPrompt}/>}
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                            <Form onSubmit={handleSubmit} autoComplete="off">
+                                <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}
+                                className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
+                                {/* <AnswerInput onChange={handleOnInputChange}/> */}
+                                {/* <Button onClick={handleSubmit}>&gt;</Button> */}
+                            </Form>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                            <AnswerResult currentState={answerState} result={answerResult} />
+                            </Col>
+                        </Row>
+                        {answerState === AnswerState.FINISHED && <FinalResult />}
                     </Col>
                 </Row>
             </Col>

@@ -59,8 +59,13 @@ function App() {
           </Button>
         </Col>
         <Col>
-        <Button onClick={handleKanjiSetSelection} data-option='full'>
+          <Button onClick={handleKanjiSetSelection} data-option='full'>
             Full Set
+          </Button>
+        </Col>
+        <Col>
+          <Button onClick={handleKanjiSetSelection} data-option='test'>
+            Test
           </Button>
         </Col>
       </Row>
