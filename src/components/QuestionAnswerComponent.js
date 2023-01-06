@@ -20,25 +20,40 @@ export const QuestionAnswerComponent = (props) => {
       const [answerResult, setAnswerResult] = useState(Result.NA);
       const [totalAnswers, setTotalAnswers] = useState(0);
       const [totalCorrect, setTotalCorrect] = useState(0);
+      const [remainingPrompts] = useState([]);
     
     
       function getNextKanjiPrompt() {
-        return props.kanjis[Math.floor(Math.random() * props.kanjis.length)];
+        return remainingPrompts.pop();
       };
     
       const updateKanjiPrompt = () => {
-        console.log("kanjis pool length:", props.kanjis.length);
-        setKanjiPrompt(getNextKanjiPrompt());
+        console.log("kanjis pool length:", remainingPrompts.length);
+        if (remainingPrompts.length === 0) {
+            // TODO session over
+        } else {
+            setKanjiPrompt(getNextKanjiPrompt());
+        }
       };
       
+      function shuffle(unshuffled) {
+        return unshuffled
+            .map(value => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value)
+      }
+
       useEffect(() => {
+        if (remainingPrompts.length === 0) {
+          remainingPrompts.push(...shuffle(props.kanjis));
+        }
         updateKanjiPrompt();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
     
       function Score() {
         const percentage = totalAnswers === 0 ? 0 : Math.round(totalCorrect/totalAnswers * 100, 2);
-        return <div className='score'><span>{totalCorrect}/{totalAnswers}</span> <span>({percentage} %)</span></div>
+        return <div className='score'><span>{totalCorrect}/{totalAnswers}</span> <span>({percentage} %)</span> <span>Total: {props.kanjis.length}</span></div>
       }
     
       function handleOnInputChange(event) {
