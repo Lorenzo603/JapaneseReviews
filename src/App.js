@@ -38,11 +38,11 @@ function App() {
         break;
       default:
         selectedSet = fullDictionary
-        .filter(kanji => kanji['data'].hasOwnProperty('categories'))
-        .filter(kanji => kanji['data']['categories'].includes(dataOption));
+          .filter(kanji => kanji['data'].hasOwnProperty('categories'))
+          .filter(kanji => kanji['data']['categories'].includes(dataOption));
         break;
     }
-    
+
     setKanjiSet(selectedSet);
     setAppState(AppState.QUESTION_ANSWER);
   }
@@ -80,7 +80,7 @@ function App() {
     <Container fluid className='App'>
       <Row>
         <Col className='App-body'>
-          {appState === AppState.SELECT_MODE ? <SelectMode/> : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent}/>}
+          {appState === AppState.SELECT_MODE ? <SelectMode /> : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent} />}
         </Col>
       </Row>
     </Container>
