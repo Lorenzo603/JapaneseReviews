@@ -47,6 +47,10 @@ function App() {
     setAppState(AppState.QUESTION_ANSWER);
   }
 
+  function handleResetEvent() {
+    setAppState(AppState.SELECT_MODE);
+  }
+
   function SelectMode() {
     return (
       <Row>
@@ -76,7 +80,7 @@ function App() {
     <Container fluid className='App'>
       <Row>
         <Col className='App-body'>
-          {appState === AppState.SELECT_MODE ? <SelectMode/> : <QuestionAnswerComponent kanjis={kanjiSet}/>}
+          {appState === AppState.SELECT_MODE ? <SelectMode/> : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent}/>}
         </Col>
       </Row>
     </Container>

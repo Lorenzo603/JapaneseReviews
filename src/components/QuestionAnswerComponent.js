@@ -127,7 +127,7 @@ export const QuestionAnswerComponent = (props) => {
                     </Row>
                     <Row>
                         <Col>
-                            <Button>
+                            <Button onClick={props.resetHandler}>
                                 Go back
                             </Button>
                         </Col>
