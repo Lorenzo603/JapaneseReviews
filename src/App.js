@@ -54,23 +54,29 @@ function App() {
   function SelectMode() {
     return (
       <Row>
-        <Col>
-          Select Kanji set:
-        </Col>
-        <Col>
-          <Button onClick={handleKanjiSetSelection} data-option='jlpt5'>
-            Use JLPT N5
-          </Button>
-        </Col>
-        <Col>
-          <Button onClick={handleKanjiSetSelection} data-option='full'>
-            Full Set
-          </Button>
-        </Col>
-        <Col>
-          <Button onClick={handleKanjiSetSelection} data-option='test'>
-            Test
-          </Button>
+        <Col className='App-body'>
+          <Row>
+            <Col>
+              Select Kanji set:
+            </Col>
+          </Row>
+           <Row>
+            <Col>
+              <Button onClick={handleKanjiSetSelection} data-option='jlpt5'>
+                Use JLPT N5
+              </Button>
+            </Col>
+            <Col>
+              <Button onClick={handleKanjiSetSelection} data-option='full'>
+                Full Set
+              </Button>
+            </Col>
+            <Col>
+              <Button onClick={handleKanjiSetSelection} data-option='test'>
+                Test
+              </Button>
+            </Col>
+          </Row>
         </Col>
       </Row>
     );

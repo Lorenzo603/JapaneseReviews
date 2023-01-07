@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Col, Form, Row, Button, Dropdown } from 'react-bootstrap';
-
+import { ScoreComponent } from './ScoreComponent';
 
 export const QuestionAnswerComponent = (props) => {
     const Result = {
@@ -68,11 +68,6 @@ export const QuestionAnswerComponent = (props) => {
                 </Dropdown.Menu>
             </Dropdown>
         );
-    }
-
-    function Score() {
-        const percentage = totalAnswers === 0 ? 0 : Math.round(totalCorrect / totalAnswers * 100, 2);
-        return <div className='score'><span>{totalCorrect}/{totalAnswers}</span> <span>({percentage} %)</span> <span>Reviews: {props.kanjis.length}</span></div>
     }
 
     function handleOnInputChange(event) {
@@ -162,7 +157,7 @@ export const QuestionAnswerComponent = (props) => {
                         <SessionMenu />
                     </Col>
                     <Col>
-                        <Score />
+                        <ScoreComponent totalAnswers={totalAnswers} totalCorrect={totalCorrect} totalReviews={props.kanjis.length} />
                     </Col>
                 </Row>
                 <Row>

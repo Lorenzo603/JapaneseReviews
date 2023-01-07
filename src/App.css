@@ -23,6 +23,10 @@ body {
   font-size: x-large;
 }
 
+.total-reviews {
+  background-color: #7283e3;
+}
+
 .kanjiPrompt {
   font-size: 6rem;
   font-family: "Hiragino Kaku Gothic Pro";
@@ -62,4 +66,10 @@ input[type="text"] {
 
 .wrongAnswerRecap {
   font-family: "Hiragino Kaku Gothic Pro";
+}
+
+button.btn-primary {
+  background-color: #282c34;
+  border-color: #282c34;
+  border-radius: 0;
 }
