@@ -153,7 +153,7 @@ export const QuestionAnswerComponent = (props) => {
         <Row>
             <Col>
                 <Row>
-                    <Col>
+                    <Col className='hamburger-menu'>
                         <SessionMenu />
                     </Col>
                     <Col>
