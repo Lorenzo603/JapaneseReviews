@@ -124,7 +124,7 @@ export const QuestionAnswerComponent = (props) => {
 
     function WrongAnswersRecap() {
         return (
-            <ul>
+            <ul className='wrongAnswerRecap'>
                 {wrongAnswers.map(wrongAnswer =>
                     <li key={wrongAnswer['id']}>{wrongAnswer['data']['slug']}:
                         {getAcceptedMeanings(wrongAnswer).map(meaning => meaning['meaning']).join(', ')}</li>
