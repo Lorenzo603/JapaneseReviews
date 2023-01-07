@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Col, Form, Row, Button } from 'react-bootstrap';
+import { Col, Form, Row, Button, Dropdown } from 'react-bootstrap';
 
 
 export const QuestionAnswerComponent = (props) => {
@@ -53,9 +53,26 @@ export const QuestionAnswerComponent = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    function endSession() {
+        setAnswerState(AnswerState.FINISHED);
+    }
+
+    function SessionMenu() {
+        return (
+            <Dropdown>
+                <Dropdown.Toggle>
+                    Settings
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={endSession}>End Session</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+        );
+    }
+
     function Score() {
         const percentage = totalAnswers === 0 ? 0 : Math.round(totalCorrect / totalAnswers * 100, 2);
-        return <div className='score'><span>{totalCorrect}/{totalAnswers}</span> <span>({percentage} %)</span> <span>Total: {props.kanjis.length}</span></div>
+        return <div className='score'><span>{totalCorrect}/{totalAnswers}</span> <span>({percentage} %)</span> <span>Reviews: {props.kanjis.length}</span></div>
     }
 
     function handleOnInputChange(event) {
@@ -127,7 +144,7 @@ export const QuestionAnswerComponent = (props) => {
                     </Row>
                     <Row>
                         <Col>
-                            <Button>
+                            <Button onClick={props.resetHandler}>
                                 Go back
                             </Button>
                         </Col>
@@ -141,6 +158,9 @@ export const QuestionAnswerComponent = (props) => {
         <Row>
             <Col>
                 <Row>
+                    <Col>
+                        <SessionMenu />
+                    </Col>
                     <Col>
                         <Score />
                     </Col>
