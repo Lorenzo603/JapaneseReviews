@@ -60,10 +60,15 @@ function App() {
               Select Kanji set:
             </Col>
           </Row>
-           <Row>
+          <Row>
             <Col>
               <Button onClick={handleKanjiSetSelection} data-option='jlpt5'>
-                Use JLPT N5
+                JLPT N5
+              </Button>
+            </Col>
+            <Col>
+              <Button onClick={handleKanjiSetSelection} data-option='jlpt4'>
+                JLPT N4
               </Button>
             </Col>
             <Col>
