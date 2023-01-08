@@ -22,6 +22,10 @@ body {
   text-align: left;
 }
 
+.select-title {
+  font-size: xx-large;
+}
+
 .score {
   text-align: right;
   font-size: x-large;
