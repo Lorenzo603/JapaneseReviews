@@ -1,10 +1,14 @@
 import './App.css';
-import { Col, Container, Row, Button, Form } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import kanjiRaw from './kanji_full.json';
 import vocabularyRaw from './vocabulary_full.json';
+import { loadDictionary } from './DictionaryLoader';
+import { SelectModeComponent } from './components/SelectModeComponent';
+import { SelectionOption } from './components/SelectionOptionComponent';
 import { QuestionAnswerComponent } from './components/QuestionAnswerComponent';
 import { GuessMode } from './GuessMode'
+
 function App() {
 
   const AppState = {
@@ -18,27 +22,15 @@ function App() {
   const [kanjiSet, setKanjiSet] = useState([]);
   const [guessMode, setGuessMode] = useState(GuessMode.GUESS_MEANING);
 
-  function loadKanjiDictionary() {
+  useEffect(() => {
     if (fullKanjiDictionary.length === 0) {
-      kanjiRaw['data'].forEach(kanji => {
-        fullKanjiDictionary.push(kanji);
-      });
+      fullKanjiDictionary.push(...loadDictionary(kanjiRaw));
       console.log('Loaded', fullKanjiDictionary.length, 'kanjis in the dictionary');
     }
-  }
-
-  function loadVocabularyDictionary() {
     if (fullVocabularyDictionary.length === 0) {
-      vocabularyRaw['data'].forEach(vocab => {
-        fullVocabularyDictionary.push(vocab);
-      });
+      fullVocabularyDictionary.push(...loadDictionary(vocabularyRaw));
       console.log('Loaded', fullVocabularyDictionary.length, 'vocabs in the dictionary');
     }
-  }
-
-  useEffect(() => {
-    loadKanjiDictionary();
-    loadVocabularyDictionary();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -67,18 +59,6 @@ function App() {
     setAppState(AppState.SELECT_MODE);
   }
 
-  function SelectionOption(props) {
-    return (
-      <Row>
-        <Col>
-          <Button onClick={props.handleSetSelectionCallback} data-option={props.dataOption}>
-            {props.children}
-          </Button>
-        </Col>
-      </Row>
-    );
-  }
-
   const handleGuessModeSelection = (event) => {
     const selectedId = event.target.getAttribute('id');
     setGuessMode(selectedId === 'guess-meaning' ? GuessMode.GUESS_MEANING : GuessMode.GUESS_READING);
@@ -88,21 +68,7 @@ function App() {
     return (
       <Row>
         <Col className='App-body'>
-          <Row className='select-title'>
-            <Col>
-              Select Mode:
-            </Col>
-          </Row>
-          <Row className='justify-content-center'>
-            <Col className='col-2'>
-              <Form>
-                <Form.Check type="radio" name="guess-mode-radio-group" id="guess-meaning" label="Guess Meaning"
-                  onChange={handleGuessModeSelection} checked={guessMode === GuessMode.GUESS_MEANING} />
-                <Form.Check type="radio" name="guess-mode-radio-group" id="guess-reading" label="Guess Reading"
-                  onChange={handleGuessModeSelection} checked={guessMode === GuessMode.GUESS_READING} />
-              </Form>
-            </Col>
-          </Row>
+          <SelectModeComponent guessMode={guessMode} handleGuessModeSelection={handleGuessModeSelection} />
           <Row className='select-title'>
             <Col>
               Select Kanji set:
