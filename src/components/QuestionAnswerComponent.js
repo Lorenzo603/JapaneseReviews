@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Col, Form, Row, Button, Dropdown } from 'react-bootstrap';
 import { ScoreComponent } from './ScoreComponent';
+var wanakana = require('wanakana');
 
 export const QuestionAnswerComponent = (props) => {
     const Result = {
@@ -24,7 +25,6 @@ export const QuestionAnswerComponent = (props) => {
     const [remainingPrompts] = useState([]);
     const [wrongAnswers] = useState([]);
     const [focusModeEnabled, setFocusModeEnabled] = useState(false);
-
 
     function getNextKanjiPrompt() {
         return remainingPrompts.pop();
@@ -50,6 +50,7 @@ export const QuestionAnswerComponent = (props) => {
         if (remainingPrompts.length === 0) {
             remainingPrompts.push(...shuffle(props.kanjis));
             updateKanjiPrompt();
+            // wanakana.bind(document.getElementById('answer'));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
