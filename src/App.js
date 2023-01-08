@@ -1,5 +1,5 @@
 import './App.css';
-import { Col, Container, Row, Button } from 'react-bootstrap';
+import { Col, Container, Row, Button, Form } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import kanjiRaw from './kanji_full.json';
 import vocabularyRaw from './vocabulary_full.json';
@@ -12,10 +12,16 @@ function App() {
     QUESTION_ANSWER: 1,
   };
 
+  const GuessMode = {
+    GUESS_MEANING: 0,
+    GUESS_READING: 1,
+  };
+
   const [appState, setAppState] = useState(AppState.SELECT_MODE);
   const [fullKanjiDictionary] = useState([]);
   const [fullVocabularyDictionary] = useState([]);
   const [kanjiSet, setKanjiSet] = useState([]);
+  const [guessMode, setGuessMode] = useState(GuessMode.GUESS_MEANING);
 
   function loadKanjiDictionary() {
     if (fullKanjiDictionary.length === 0) {
@@ -78,12 +84,32 @@ function App() {
     );
   }
 
+  const handleGuessModeSelection = (event) => {
+    const selectedId = event.target.getAttribute('id');
+    setGuessMode(selectedId === 'guess-meaning' ? GuessMode.GUESS_MEANING : GuessMode.GUESS_READING);
+  }
+
   function SelectMode() {
     return (
       <Row>
         <Col className='App-body'>
-          <Row>
-            <Col className='select-title'>
+          <Row className='select-title'>
+            <Col>
+              Select Mode:
+            </Col>
+          </Row>
+          <Row className='justify-content-center'>
+            <Col className='col-2'>
+              <Form>
+                <Form.Check type="radio" name="guess-mode-radio-group" id="guess-meaning" label="Guess Meaning"
+                  onChange={handleGuessModeSelection} checked={guessMode === GuessMode.GUESS_MEANING} />
+                <Form.Check type="radio" name="guess-mode-radio-group" id="guess-reading" label="Guess Reading"
+                  onChange={handleGuessModeSelection} checked={guessMode === GuessMode.GUESS_READING} />
+              </Form>
+            </Col>
+          </Row>
+          <Row className='select-title'>
+            <Col>
               Select Kanji set:
             </Col>
           </Row>
@@ -103,7 +129,11 @@ function App() {
     <Container fluid className='App'>
       <Row>
         <Col className='App-body'>
-          {appState === AppState.SELECT_MODE ? <SelectMode /> : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent} />}
+          {
+            appState === AppState.SELECT_MODE
+              ? <SelectMode />
+              : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent} guessMode={guessMode} />
+          }
         </Col>
       </Row>
     </Container>
