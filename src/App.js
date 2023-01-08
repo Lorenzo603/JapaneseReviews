@@ -72,6 +72,16 @@ function App() {
               </Button>
             </Col>
             <Col>
+              <Button onClick={handleKanjiSetSelection} data-option='jlpt3'>
+                JLPT N3
+              </Button>
+            </Col>
+            <Col>
+              <Button onClick={handleKanjiSetSelection} data-option='jlpt2'>
+                JLPT N2
+              </Button>
+            </Col>
+            <Col>
               <Button onClick={handleKanjiSetSelection} data-option='full'>
                 Full Set
               </Button>
