@@ -7,6 +7,7 @@ export const ScoreComponent = (props) => {
     function Tally() {
         return <span>{props.totalCorrect}/{props.totalAnswers}</span>
     }
+    
     function Percentage() {
         return <span>{percentage}%</span>;
     }
@@ -17,8 +18,6 @@ export const ScoreComponent = (props) => {
 
     return (
         <Row className='score'>
-            {/* <Col></Col>
-            <Col></Col> */}
             <Col className="col-10"><Tally /></Col>
             <Col className="col-1 text-center"><Percentage /></Col>
             <Col className="col-1 text-center total-reviews"><TotalReviews /></Col>

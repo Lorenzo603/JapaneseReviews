@@ -23,6 +23,7 @@ export const QuestionAnswerComponent = (props) => {
     const [totalCorrect, setTotalCorrect] = useState(0);
     const [remainingPrompts] = useState([]);
     const [wrongAnswers] = useState([]);
+    const [focusModeEnabled, setFocusModeEnabled] = useState(false);
 
 
     function getNextKanjiPrompt() {
@@ -53,6 +54,10 @@ export const QuestionAnswerComponent = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    function toggleFocusMode() {
+        setFocusModeEnabled(!focusModeEnabled);
+    }
+
     function endSession() {
         setAnswerState(AnswerState.FINISHED);
     }
@@ -61,9 +66,10 @@ export const QuestionAnswerComponent = (props) => {
         return (
             <Dropdown>
                 <Dropdown.Toggle>
-                    Settings
+                    {focusModeEnabled ? "" : "Settings"}
                 </Dropdown.Toggle>
-                <Dropdown.Menu>
+                <Dropdown.Menu variant="dark">
+                    <Dropdown.Item onClick={toggleFocusMode}>{focusModeEnabled ? "Disable Focus Mode" : "Enable Focus Mode"}</Dropdown.Item>
                     <Dropdown.Item onClick={endSession}>End Session</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
@@ -157,7 +163,7 @@ export const QuestionAnswerComponent = (props) => {
                         <SessionMenu />
                     </Col>
                     <Col>
-                        <ScoreComponent totalAnswers={totalAnswers} totalCorrect={totalCorrect} totalReviews={props.kanjis.length} />
+                        {!focusModeEnabled && <ScoreComponent totalAnswers={totalAnswers} totalCorrect={totalCorrect} totalReviews={props.kanjis.length} />}
                     </Col>
                 </Row>
                 <Row>
