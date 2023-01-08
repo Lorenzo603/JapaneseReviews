@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Col, Form, Row, Button, Dropdown } from 'react-bootstrap';
 import { ScoreComponent } from './ScoreComponent';
+import { GuessMode } from '../GuessMode'
 var wanakana = require('wanakana');
 
 export const QuestionAnswerComponent = (props) => {
@@ -18,7 +19,6 @@ export const QuestionAnswerComponent = (props) => {
 
     const [answerState, setAnswerState] = useState(AnswerState.WAITING_RESPONSE);
     const [kanjiPrompt, setKanjiPrompt] = useState();
-    const [userAnswer, setUserAnswer] = useState("");
     const [answerResult, setAnswerResult] = useState(Result.NA);
     const [totalAnswers, setTotalAnswers] = useState(0);
     const [totalCorrect, setTotalCorrect] = useState(0);
@@ -46,11 +46,17 @@ export const QuestionAnswerComponent = (props) => {
             .map(({ value }) => value)
     }
 
+    function getAnswerInputElement() {
+        return document.getElementById('answer');
+    }
+
     useEffect(() => {
         if (remainingPrompts.length === 0) {
             remainingPrompts.push(...shuffle(props.kanjis));
             updateKanjiPrompt();
-            // wanakana.bind(document.getElementById('answer'));
+            if (props.guessMode === GuessMode.GUESS_READING) {
+                wanakana.bind(getAnswerInputElement());
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -77,20 +83,24 @@ export const QuestionAnswerComponent = (props) => {
         );
     }
 
-    function handleOnInputChange(event) {
-        setUserAnswer(event.target.value);
+    function getCurrentMode() {
+        return props.guessMode === GuessMode.GUESS_MEANING ? 'meanings' : 'readings';
     }
 
-    function getAcceptedMeanings(kanjiPrompt) {
-        return kanjiPrompt['data']['meanings']
-            .filter(meaning => meaning.accepted_answer)
+    function getCurrentModeSingle() {
+        return props.guessMode === GuessMode.GUESS_MEANING ? 'meaning' : 'reading'
+    }
+
+    function getAcceptedAnswers(kanjiPrompt) {
+        return kanjiPrompt['data'][getCurrentMode()]
+            .filter(potentialAnswer => potentialAnswer.accepted_answer)
     }
 
     function handleSubmit(event) {
         event.preventDefault();
         if (answerState === AnswerState.WAITING_RESPONSE) {
-            const accepted_meanings = getAcceptedMeanings(kanjiPrompt).map(meaning => meaning['meaning'].toLowerCase());
-            if (accepted_meanings.includes(userAnswer.toLowerCase())) {
+            const acceptedAnswers = getAcceptedAnswers(kanjiPrompt).map(answer => answer[getCurrentModeSingle()].toLowerCase());
+            if (acceptedAnswers.includes(getAnswerInputElement().value.toLowerCase())) {
                 setAnswerResult(Result.CORRECT);
                 setTotalCorrect(totalCorrect + 1);
             } else {
@@ -101,7 +111,7 @@ export const QuestionAnswerComponent = (props) => {
             setTotalAnswers(totalAnswers + 1);
         } else {
             setAnswerState(AnswerState.WAITING_RESPONSE);
-            setUserAnswer("");
+            getAnswerInputElement().value = "";
             updateKanjiPrompt();
         }
 
@@ -111,15 +121,11 @@ export const QuestionAnswerComponent = (props) => {
         return <p className="kanjiPrompt">{props.kanjiPrompt['data']['slug']}</p>;
     }
 
-    // function AnswerInput(props) {
-    //   return <input type="text" id="answer" value={userAnswer} onChange={props.onChange} />;
-    // }
-
     function AnswerResult(props) {
         return <div className='answer-result'>{props.currentState === AnswerState.ANSWERED ?
             props.result === Result.CORRECT
                 ? "Correct!"
-                : getAcceptedMeanings(kanjiPrompt).filter(meaning => meaning.primary)[0]['meaning']
+                : getAcceptedAnswers(kanjiPrompt).filter(answer => answer.primary)[0][getCurrentModeSingle()]
             : ""}
         </div>
     }
@@ -129,7 +135,7 @@ export const QuestionAnswerComponent = (props) => {
             <ul className='wrongAnswerRecap'>
                 {wrongAnswers.map(wrongAnswer =>
                     <li key={wrongAnswer['id']}>{wrongAnswer['data']['slug']}:
-                        {getAcceptedMeanings(wrongAnswer).map(meaning => meaning['meaning']).join(', ')}</li>
+                        {getAcceptedAnswers(wrongAnswer).map(answer => answer[getCurrentModeSingle()]).join(', ')}</li>
                 )}
             </ul>
         );
@@ -177,7 +183,7 @@ export const QuestionAnswerComponent = (props) => {
                         <Row>
                             <Col>
                                 <Form onSubmit={handleSubmit} autoComplete="off">
-                                    <input type="text" id="answer" value={userAnswer} onChange={handleOnInputChange}
+                                    <input type="text" id="answer"
                                         className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
                                     {/* <AnswerInput onChange={handleOnInputChange}/> */}
                                     {/* <Button onClick={handleSubmit}>&gt;</Button> */}

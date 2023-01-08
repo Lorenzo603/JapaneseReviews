@@ -4,17 +4,12 @@ import { useEffect, useState } from 'react';
 import kanjiRaw from './kanji_full.json';
 import vocabularyRaw from './vocabulary_full.json';
 import { QuestionAnswerComponent } from './components/QuestionAnswerComponent';
-
+import { GuessMode } from './GuessMode'
 function App() {
 
   const AppState = {
     SELECT_MODE: 0,
     QUESTION_ANSWER: 1,
-  };
-
-  const GuessMode = {
-    GUESS_MEANING: 0,
-    GUESS_READING: 1,
   };
 
   const [appState, setAppState] = useState(AppState.SELECT_MODE);
