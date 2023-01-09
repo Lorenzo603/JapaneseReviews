@@ -161,8 +161,6 @@ export const QuestionAnswerComponent = (props) => {
                                 <Form onSubmit={handleSubmit} autoComplete="off">
                                     <input type="text" id="answer"
                                         className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
-                                    {/* <AnswerInput onChange={handleOnInputChange}/> */}
-                                    {/* <Button onClick={handleSubmit}>&gt;</Button> */}
                                 </Form>
                             </Col>
                         </Row>
