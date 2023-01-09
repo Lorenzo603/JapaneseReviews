@@ -25,6 +25,17 @@ body {
 .select-title {
   font-size: xx-large;
   padding-top: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+button.btn-primary.select-mode-button {
+  height: 5rem;
+  background-color: #282c34;
+}
+button.btn-primary.select-mode-button-checked {
+  height: 5rem;
+  background-color: #282c34;
+  border-color: #0d6efd;
 }
 
 .score {

@@ -1,4 +1,5 @@
-import { Col, Row, Form } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
+import { SelectModeButton } from './SelectModeButtonComponent';
 import { GuessMode } from '../GuessMode'
 
 export const SelectModeComponent = (props) => {
@@ -13,12 +14,8 @@ export const SelectModeComponent = (props) => {
                 </Row>
                 <Row className='justify-content-center'>
                     <Col className='col-2'>
-                        <Form>
-                            <Form.Check type="radio" name="guess-mode-radio-group" id="guess-meaning" label="Guess Meaning"
-                                onChange={props.handleGuessModeSelection} checked={props.guessMode === GuessMode.GUESS_MEANING} />
-                            <Form.Check type="radio" name="guess-mode-radio-group" id="guess-reading" label="Guess Reading"
-                                onChange={props.handleGuessModeSelection} checked={props.guessMode === GuessMode.GUESS_READING} />
-                        </Form>
+                        <SelectModeButton id="guess-meaning" onClickHander={props.handleGuessModeSelection} checked={props.guessMode === GuessMode.GUESS_MEANING}>Guess Meaning</SelectModeButton>
+                        <SelectModeButton id="guess-reading" onClickHander={props.handleGuessModeSelection} checked={props.guessMode === GuessMode.GUESS_READING}>Guess Reading</SelectModeButton>
                     </Col>
                 </Row>
             </Col>
