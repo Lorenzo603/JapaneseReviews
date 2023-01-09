@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Col, Form, Row, Button, Dropdown } from 'react-bootstrap';
-import { ScoreComponent } from './ScoreComponent';
-import { GuessMode } from '../GuessMode'
+import { Col, Form, Row, Button } from 'react-bootstrap';
+import { HeaderMenu } from './HeaderMenuComponent';
+import { GuessMode } from '../GuessMode';
 var wanakana = require('wanakana');
 
 export const QuestionAnswerComponent = (props) => {
@@ -24,7 +24,6 @@ export const QuestionAnswerComponent = (props) => {
     const [totalCorrect, setTotalCorrect] = useState(0);
     const [remainingPrompts] = useState([]);
     const [wrongAnswers] = useState([]);
-    const [focusModeEnabled, setFocusModeEnabled] = useState(false);
 
     function getNextKanjiPrompt() {
         return remainingPrompts.pop();
@@ -61,26 +60,8 @@ export const QuestionAnswerComponent = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function toggleFocusMode() {
-        setFocusModeEnabled(!focusModeEnabled);
-    }
-
     function endSession() {
         setAnswerState(AnswerState.FINISHED);
-    }
-
-    function SessionMenu() {
-        return (
-            <Dropdown>
-                <Dropdown.Toggle>
-                    {focusModeEnabled ? "" : "Settings"}
-                </Dropdown.Toggle>
-                <Dropdown.Menu variant="dark">
-                    <Dropdown.Item onClick={toggleFocusMode}>{focusModeEnabled ? "Disable Focus Mode" : "Enable Focus Mode"}</Dropdown.Item>
-                    <Dropdown.Item onClick={endSession}>End Session</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
-        );
     }
 
     function getCurrentMode() {
@@ -165,14 +146,9 @@ export const QuestionAnswerComponent = (props) => {
     return (
         <Row>
             <Col>
-                <Row>
-                    <Col className='hamburger-menu'>
-                        <SessionMenu />
-                    </Col>
-                    <Col>
-                        {!focusModeEnabled && <ScoreComponent totalAnswers={totalAnswers} totalCorrect={totalCorrect} totalReviews={props.kanjis.length} />}
-                    </Col>
-                </Row>
+                <HeaderMenu endSessionHandler={endSession}
+                    totalAnswers={totalAnswers} totalCorrect={totalCorrect}
+                    totalReviews={props.kanjis.length} />
                 <Row>
                     <Col className='App-body'>
                         <Row>
