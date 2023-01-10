@@ -1,5 +1,5 @@
 import './App.css';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Form, Button } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import kanjiRaw from './kanji_full.json';
 import vocabularyRaw from './vocabulary_full.json';
@@ -44,6 +44,11 @@ function App() {
       case "full":
         selectedSet = fullKanjiDictionary;
         break;
+      case "level":
+        const level = Number(document.getElementById('level-input').value);
+        selectedSet = fullKanjiDictionary
+          .filter(kanji => kanji['data']['level'] === level);
+        break;
       default:
         selectedSet = fullKanjiDictionary
           .filter(kanji => kanji['data'].hasOwnProperty('categories'))
@@ -74,6 +79,16 @@ function App() {
               Select Kanji set:
             </Col>
           </Row>
+          <Row>
+            <Col>
+              <Form onSubmit={handleSetSelection} data-option={'level'}>
+                <Form.Label>Select Level:</Form.Label>
+                <input type="text" id="level-input" />
+                <Button type='submit' dataOption={'level'}>Go</Button>
+              </Form>
+            </Col>
+          </Row>
+
           <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'jlpt5'}>JLPT N5</SelectionOption>
           <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'jlpt4'}>JLPT N4</SelectionOption>
           <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'jlpt3'}>JLPT N3</SelectionOption>

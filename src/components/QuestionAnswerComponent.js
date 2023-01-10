@@ -25,6 +25,8 @@ export const QuestionAnswerComponent = (props) => {
     const [remainingPrompts] = useState([]);
     const [wrongAnswers] = useState([]);
 
+    const ANSWER_INPUT_ID = 'answer-input';
+
     function getNextKanjiPrompt() {
         return remainingPrompts.pop();
     };
@@ -46,7 +48,7 @@ export const QuestionAnswerComponent = (props) => {
     }
 
     function getAnswerInputElement() {
-        return document.getElementById('answer');
+        return document.getElementById(ANSWER_INPUT_ID);
     }
 
     useEffect(() => {
@@ -159,7 +161,7 @@ export const QuestionAnswerComponent = (props) => {
                         <Row>
                             <Col>
                                 <Form onSubmit={handleSubmit} autoComplete="off">
-                                    <input type="text" id="answer"
+                                    <input type="text" id={ANSWER_INPUT_ID}
                                         className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
                                 </Form>
                             </Col>

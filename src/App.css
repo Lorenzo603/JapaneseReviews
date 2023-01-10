@@ -52,7 +52,7 @@ button.btn-primary.select-mode-button-checked {
   font-family: "Hiragino Kaku Gothic Pro";
 }
 
-input[type="text"] {
+#answer-input  {
   width: 100%;
   padding: 1rem 2rem;
   margin-bottom: 1rem;
