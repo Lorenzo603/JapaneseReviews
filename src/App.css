@@ -95,15 +95,32 @@ button.btn-primary {
   border-radius: 0;
 }
 
-.popover.popover-bg {
-  background-color: rgb(32, 16, 16);
+button.btn-primary.selectedLevel {
+  border-color: #0d6efd;
 }
 
-.popover.right .arrow {
-  visibility: hidden;
+#popover-basic {
+  max-width: 20%;
 }
-
-.level-number {
+#popover-basic .popover-body {
+  padding: 0.1rem;
+  background-color: rgb(41, 40, 40);
+}
+#popover-basic .popover-body .row {
   padding: 0;
   margin: 0;
 }
+
+#popover-basic .popover-body .row .col {
+  padding: 0;
+  margin: 0;
+}
+
+#popover-basic .popover-body .row .col button {
+  width: 100%;
+}
+
+#popover-basic .popover.right .arrow {
+  visibility: hidden;
+}
+

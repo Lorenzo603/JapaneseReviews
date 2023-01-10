@@ -70,12 +70,12 @@ function App() {
   }
 
   const popover = (
-    <Popover id="popover-basic" className='popover-bg'>
+    <Popover id="popover-basic">
       <Popover.Body>
         <Row>
           {Array.from({ length: 60 }, (_, i) => i + 1).map(index => {
             return (
-              <Col className='level-number'>
+              <Col className='col-2 level-number'>
                 <Button onClick={() => setSelectedLevel(index)}>{index}</Button>
               </Col>
             );
@@ -96,15 +96,15 @@ function App() {
             </Col>
           </Row>
           <Row className='justify-content-center'>
-            <Col className='col-4'>
+            <Col className='col-2'>
               <Form onSubmit={handleSetSelection} data-option={'level'}>
                 <Row className='align-items-center'>
-                  <Col>
+                  <Col className='justify-content-right'>
                     <OverlayTrigger variant="dark" trigger="click" placement="right" overlay={popover}>
-                      <Button variant="success">{selectedLevel}</Button>
+                      <Button className='selectedLevel'>{selectedLevel}</Button>
                     </OverlayTrigger>
                   </Col>
-                  <Col>
+                  <Col className='justify-content-left'>
                     <Button type='submit'>Select Level</Button>
                   </Col>
                 </Row>
