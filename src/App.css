@@ -32,6 +32,7 @@ button.btn-primary.select-mode-button {
   height: 5rem;
   background-color: #282c34;
 }
+
 button.btn-primary.select-mode-button-checked {
   height: 5rem;
   background-color: #282c34;
@@ -52,7 +53,7 @@ button.btn-primary.select-mode-button-checked {
   font-family: "Hiragino Kaku Gothic Pro";
 }
 
-#answer-input  {
+#answer-input {
   width: 100%;
   padding: 1rem 2rem;
   margin-bottom: 1rem;
@@ -92,4 +93,17 @@ button.btn-primary {
   background-color: #282c34;
   border-color: #282c34;
   border-radius: 0;
+}
+
+.popover.popover-bg {
+  background-color: rgb(32, 16, 16);
+}
+
+.popover.right .arrow {
+  visibility: hidden;
+}
+
+.level-number {
+  padding: 0;
+  margin: 0;
 }

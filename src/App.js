@@ -1,5 +1,5 @@
 import './App.css';
-import { Col, Container, Row, Form, Button } from 'react-bootstrap';
+import { Col, Container, Row, Form, Button, Popover, OverlayTrigger } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import kanjiRaw from './kanji_full.json';
 import vocabularyRaw from './vocabulary_full.json';
@@ -21,6 +21,7 @@ function App() {
   const [fullVocabularyDictionary] = useState([]);
   const [kanjiSet, setKanjiSet] = useState([]);
   const [guessMode, setGuessMode] = useState(GuessMode.GUESS_MEANING);
+  const [selectedLevel, setSelectedLevel] = useState(1);
 
   useEffect(() => {
     if (fullKanjiDictionary.length === 0) {
@@ -45,9 +46,8 @@ function App() {
         selectedSet = fullKanjiDictionary;
         break;
       case "level":
-        const level = Number(document.getElementById('level-input').value);
         selectedSet = fullKanjiDictionary
-          .filter(kanji => kanji['data']['level'] === level);
+          .filter(kanji => kanji['data']['level'] === selectedLevel);
         break;
       default:
         selectedSet = fullKanjiDictionary
@@ -69,6 +69,22 @@ function App() {
     setGuessMode(selectedId === 'guess-meaning' ? GuessMode.GUESS_MEANING : GuessMode.GUESS_READING);
   }
 
+  const popover = (
+    <Popover id="popover-basic" className='popover-bg'>
+      <Popover.Body>
+        <Row>
+          {Array.from({ length: 60 }, (_, i) => i + 1).map(index => {
+            return (
+              <Col className='level-number'>
+                <Button onClick={() => setSelectedLevel(index)}>{index}</Button>
+              </Col>
+            );
+          })}
+        </Row>
+      </Popover.Body>
+    </Popover>
+  );
+
   function SelectMode() {
     return (
       <Row>
@@ -79,12 +95,19 @@ function App() {
               Select Kanji set:
             </Col>
           </Row>
-          <Row>
-            <Col>
+          <Row className='justify-content-center'>
+            <Col className='col-4'>
               <Form onSubmit={handleSetSelection} data-option={'level'}>
-                <Form.Label>Select Level:</Form.Label>
-                <input type="text" id="level-input" />
-                <Button type='submit' dataOption={'level'}>Go</Button>
+                <Row className='align-items-center'>
+                  <Col>
+                    <OverlayTrigger variant="dark" trigger="click" placement="right" overlay={popover}>
+                      <Button variant="success">{selectedLevel}</Button>
+                    </OverlayTrigger>
+                  </Col>
+                  <Col>
+                    <Button type='submit'>Select Level</Button>
+                  </Col>
+                </Row>
               </Form>
             </Col>
           </Row>
