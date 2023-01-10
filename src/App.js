@@ -8,6 +8,7 @@ import { SelectModeComponent } from './components/SelectModeComponent';
 import { SelectionOption } from './components/SelectionOptionComponent';
 import { QuestionAnswerComponent } from './components/QuestionAnswerComponent';
 import { GuessMode } from './GuessMode'
+import { useLocalStorage } from "./useLocalStorage";
 
 function App() {
 
@@ -21,7 +22,7 @@ function App() {
   const [fullVocabularyDictionary] = useState([]);
   const [kanjiSet, setKanjiSet] = useState([]);
   const [guessMode, setGuessMode] = useState(GuessMode.GUESS_MEANING);
-  const [selectedLevel, setSelectedLevel] = useState(1);
+  const [selectedLevel, setSelectedLevel] = useLocalStorage("selectedLevel", 1);
 
   useEffect(() => {
     if (fullKanjiDictionary.length === 0) {
@@ -47,7 +48,7 @@ function App() {
         break;
       case "level":
         selectedSet = fullKanjiDictionary
-          .filter(kanji => kanji['data']['level'] === selectedLevel);
+          .filter(kanji => kanji['data']['level'] === Number(selectedLevel));
         break;
       default:
         selectedSet = fullKanjiDictionary
@@ -75,7 +76,7 @@ function App() {
         <Row>
           {Array.from({ length: 60 }, (_, i) => i + 1).map(index => {
             return (
-              <Col className='col-2 level-number'>
+              <Col key={'level-number-' + index} className='col-2 level-number'>
                 <Button onClick={() => setSelectedLevel(index)}>{index}</Button>
               </Col>
             );
