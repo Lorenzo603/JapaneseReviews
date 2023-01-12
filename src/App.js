@@ -1,11 +1,10 @@
 import './App.css';
-import { Col, Container, Row, Form, Button, Popover, OverlayTrigger } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import kanjiRaw from './kanji_full.json';
 import vocabularyRaw from './vocabulary_full.json';
 import { loadDictionary } from './DictionaryLoader';
-import { SelectModeComponent } from './components/SelectModeComponent';
-import { SelectionOption } from './components/SelectionOptionComponent';
+import { SelectSettings } from './components/SelectSettingsComponent';
 import { QuestionAnswerComponent } from './components/QuestionAnswerComponent';
 import { GuessMode } from './GuessMode'
 import { useLocalStorage } from "./useLocalStorage";
@@ -70,68 +69,14 @@ function App() {
     setGuessMode(selectedId === 'guess-meaning' ? GuessMode.GUESS_MEANING : GuessMode.GUESS_READING);
   }
 
-  const popover = (
-    <Popover id="popover-basic">
-      <Popover.Body>
-        <Row>
-          {Array.from({ length: 60 }, (_, i) => i + 1).map(index => {
-            return (
-              <Col key={'level-number-' + index} className='col-2 level-number'>
-                <Button onClick={() => setSelectedLevel(index)}>{index}</Button>
-              </Col>
-            );
-          })}
-        </Row>
-      </Popover.Body>
-    </Popover>
-  );
-
-  function SelectMode() {
-    return (
-      <Row>
-        <Col className='App-body'>
-          <SelectModeComponent guessMode={guessMode} handleGuessModeSelection={handleGuessModeSelection} />
-          <Row className='select-title'>
-            <Col>
-              Select Kanji set:
-            </Col>
-          </Row>
-          <Row className='justify-content-center'>
-            <Col className='col-2'>
-              <Form onSubmit={handleSetSelection} data-option={'level'}>
-                <Row className='align-items-center'>
-                  <Col className='justify-content-right'>
-                    <OverlayTrigger variant="dark" trigger="click" placement="right" overlay={popover}>
-                      <Button className='selectedLevel'>{selectedLevel}</Button>
-                    </OverlayTrigger>
-                  </Col>
-                  <Col className='justify-content-left'>
-                    <Button type='submit'>Select Level</Button>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </Row>
-
-          <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'jlpt5'}>JLPT N5</SelectionOption>
-          <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'jlpt4'}>JLPT N4</SelectionOption>
-          <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'jlpt3'}>JLPT N3</SelectionOption>
-          <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'jlpt2'}>JLPT N2</SelectionOption>
-          <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'full'}>Full Kanji Set</SelectionOption>
-          <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'full-vocab'}>Full Vocabulary Set</SelectionOption>
-          <SelectionOption handleSetSelectionCallback={handleSetSelection} dataOption={'test'}>Test</SelectionOption>
-        </Col>
-      </Row>
-    );
-  };
-
   return (
     <Container fluid className='App'>
       <Row>
         <Col className='App-body'>
           {
             appState === AppState.SELECT_MODE
-              ? <SelectMode />
+              ? <SelectSettings handleGuessModeSelection={handleGuessModeSelection} handleSetSelection={handleSetSelection}
+                guessMode={guessMode} selectedLevel={selectedLevel} setSelectedLevel={setSelectedLevel} />
               : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent} guessMode={guessMode} />
           }
         </Col>

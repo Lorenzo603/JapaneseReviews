@@ -121,7 +121,3 @@ button.btn-primary.selectedLevel {
   width: 100%;
   border-color: #4a6082;
 }
-
-#popover-basic .popover.right .arrow {
-  visibility: hidden;
-}
