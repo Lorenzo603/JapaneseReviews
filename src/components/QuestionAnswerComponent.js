@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Col, Form, Row, Button } from 'react-bootstrap';
 import { HeaderMenu } from './HeaderMenuComponent';
 import { GuessMode } from '../GuessMode';
+import Confetti from 'react-dom-confetti';
 var wanakana = require('wanakana');
 
 export const QuestionAnswerComponent = (props) => {
@@ -24,6 +25,7 @@ export const QuestionAnswerComponent = (props) => {
     const [totalCorrect, setTotalCorrect] = useState(0);
     const [remainingPrompts] = useState([]);
     const [wrongAnswers] = useState([]);
+    const [isExploding, setIsExploding] = useState(false);
 
     const ANSWER_INPUT_ID = 'answer-input';
 
@@ -35,6 +37,9 @@ export const QuestionAnswerComponent = (props) => {
         console.log("kanjis pool length:", remainingPrompts.length);
         if (remainingPrompts.length === 0) {
             setAnswerState(AnswerState.FINISHED);
+            if (totalCorrect === totalAnswers) {
+                setIsExploding(true);
+            }
         } else {
             setKanjiPrompt(getNextKanjiPrompt());
         }
@@ -55,8 +60,10 @@ export const QuestionAnswerComponent = (props) => {
         if (remainingPrompts.length === 0) {
             remainingPrompts.push(...shuffle(props.kanjis));
             updateKanjiPrompt();
+            const answerInputElement = getAnswerInputElement();
+            answerInputElement.focus();
             if (props.guessMode === GuessMode.GUESS_READING) {
-                wanakana.bind(getAnswerInputElement());
+                wanakana.bind(answerInputElement);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,13 +131,27 @@ export const QuestionAnswerComponent = (props) => {
         );
     }
 
+    const confettiConfig = {
+        angle: '280',
+        spread: '360',
+        startVelocity: 30,
+        elementCount: 70,
+        dragFriction: 0.12,
+        duration: 4000,
+        stagger: 3,
+        width: '12px',
+        height: '12px',
+        perspective: '500px',
+        colors: ['#a864fd', '#29cdff', '#78ff44', '#ff718d', '#fdff6a'],
+    };
+
     function FinalResult() {
         return (
             <Row>
                 <Col>
                     <Row>
                         <Col>
-                            <WrongAnswersRecap />
+                            {wrongAnswers.length === 0 ? "Congratulations!" : <WrongAnswersRecap />}
                         </Col>
                     </Row>
                     <Row>
@@ -158,20 +179,29 @@ export const QuestionAnswerComponent = (props) => {
                                 {kanjiPrompt && <KanjiPrompt kanjiPrompt={kanjiPrompt} />}
                             </Col>
                         </Row>
-                        <Row>
-                            <Col>
-                                <Form onSubmit={handleSubmit} autoComplete="off">
-                                    <input type="text" id={ANSWER_INPUT_ID}
-                                        className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
-                                </Form>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <AnswerResult currentState={answerState} result={answerResult} />
-                            </Col>
-                        </Row>
+                        {answerState !== AnswerState.FINISHED && (
+                            <>
+                                <Row>
+                                    <Col>
+                                        <Form onSubmit={handleSubmit} autoComplete="off">
+                                            <input type="text" id={ANSWER_INPUT_ID}
+                                                className={answerState === AnswerState.ANSWERED ? answerResult === Result.CORRECT ? 'correct' : 'wrong' : ''} />
+                                        </Form>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <AnswerResult currentState={answerState} result={answerResult} />
+                                    </Col>
+                                </Row>
+                            </>
+                        )}
                         {answerState === AnswerState.FINISHED && <FinalResult />}
+                        <Row className="justify-content-center">
+                            <Col className="col-1">
+                                <Confetti active={isExploding} config={confettiConfig} />
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
             </Col>
