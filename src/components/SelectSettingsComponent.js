@@ -31,7 +31,7 @@ export const SelectSettings = (props) => {
                 <SelectModeComponent guessMode={props.guessMode} handleGuessModeSelection={props.handleGuessModeSelection} />
                 <Row className='select-title'>
                     <Col>
-                        Select Kanji set:
+                        Select Level:
                     </Col>
                 </Row>
                 <Row className='justify-content-center'>
@@ -51,6 +51,11 @@ export const SelectSettings = (props) => {
                     </Col>
                 </Row>
 
+                <Row className='select-title'>
+                    <Col>
+                        Preconfigured sets:
+                    </Col>
+                </Row>
                 <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt5'}>JLPT N5</SelectionOption>
                 <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt4'}>JLPT N4</SelectionOption>
                 <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt3'}>JLPT N3</SelectionOption>
