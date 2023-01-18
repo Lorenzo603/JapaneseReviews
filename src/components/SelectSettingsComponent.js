@@ -1,14 +1,16 @@
 import { Col, Row, Form, Button, Popover, OverlayTrigger } from 'react-bootstrap';
-import { SelectModeComponent } from './SelectModeComponent';
+import { RadioSelectModeComponent } from './RadioSelectModeComponent';
 import { SelectionOption } from './SelectionOptionComponent';
+import { GuessMode } from '../GuessMode'
+import { QuizSet } from '../QuizSet'
 
 export const SelectSettings = (props) => {
 
     function handleLevelNumberClick(index) {
-        props.setSelectedLevel(index); 
+        props.setSelectedLevel(index);
         document.body.click();
     }
-    
+
     const popover = (
         <Popover id="popover-basic">
             <Popover.Body>
@@ -16,7 +18,7 @@ export const SelectSettings = (props) => {
                     {Array.from({ length: 60 }, (_, i) => i + 1).map(index => {
                         return (
                             <Col key={'level-number-' + index} className='col-2 level-number'>
-                                <Button onClick={() => {handleLevelNumberClick(index);}}>{index}</Button>
+                                <Button onClick={() => { handleLevelNumberClick(index); }}>{index}</Button>
                             </Col>
                         );
                     })}
@@ -25,16 +27,51 @@ export const SelectSettings = (props) => {
         </Popover>
     );
 
+    const selectModeOptions = {
+        "title": "Select Mode:",
+        "onClickHandler": props.handleGuessModeSelection,
+        "options": [
+            {
+                "id": "guess-meaning",
+                "label": "Guess Meaning",
+                "isChecked": () => { return props.guessMode === GuessMode.GUESS_MEANING },
+            },
+            {
+                "id": "guess-reading",
+                "label": "Guess Reading",
+                "isChecked": () => { return props.guessMode === GuessMode.GUESS_READING },
+            },
+        ],
+    };
+
+    const selectQuizSetOptions = {
+        "title": "Select Set:",
+        "onClickHandler": props.handleQuizSetSelection,
+        "options": [
+            {
+                "id": "kanji-set",
+                "label": "Kanjis",
+                "isChecked": () => { return props.quizSet === QuizSet.KANJI },
+            },
+            {
+                "id": "vocabulary-set",
+                "label": "Vocab",
+                "isChecked": () => { return props.quizSet === QuizSet.VOCABULARY },
+            },
+        ],
+    };
+
     return (
         <Row>
             <Col className='App-body'>
-                <SelectModeComponent guessMode={props.guessMode} handleGuessModeSelection={props.handleGuessModeSelection} />
+                <RadioSelectModeComponent config={selectModeOptions} />
                 <Row className='select-title'>
                     <Col>
                         Select Level:
                     </Col>
                 </Row>
-                <Row className='justify-content-center'>
+                <RadioSelectModeComponent config={selectQuizSetOptions} />
+                <Row className='mt-4 justify-content-center'>
                     <Col className='col-2'>
                         <Form onSubmit={props.handleSetSelection} data-option={'level'}>
                             <Row className='align-items-center'>
@@ -44,7 +81,7 @@ export const SelectSettings = (props) => {
                                     </OverlayTrigger>
                                 </Col>
                                 <Col className='justify-content-left'>
-                                    <Button type='submit'>Select Level</Button>
+                                    <Button type='submit'>Start Quiz</Button>
                                 </Col>
                             </Row>
                         </Form>

@@ -7,6 +7,7 @@ import { loadDictionary } from './DictionaryLoader';
 import { SelectSettings } from './components/SelectSettingsComponent';
 import { QuestionAnswerComponent } from './components/QuestionAnswerComponent';
 import { GuessMode } from './GuessMode'
+import { QuizSet } from './QuizSet'
 import { useLocalStorage } from "./useLocalStorage";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
   const [fullVocabularyDictionary] = useState([]);
   const [kanjiSet, setKanjiSet] = useState([]);
   const [guessMode, setGuessMode] = useState(GuessMode.GUESS_MEANING);
+  const [quizSet, setQuizSet] = useState(QuizSet.KANJI);
   const [selectedLevel, setSelectedLevel] = useLocalStorage("selectedLevel", 1);
 
   useEffect(() => {
@@ -46,8 +48,13 @@ function App() {
         selectedSet = fullKanjiDictionary;
         break;
       case "level":
-        selectedSet = fullKanjiDictionary
+        if (quizSet === QuizSet.KANJI) {
+          selectedSet = fullKanjiDictionary
           .filter(kanji => kanji['data']['level'] === Number(selectedLevel));
+        } else {
+          selectedSet = fullVocabularyDictionary
+          .filter(vocab => vocab['data']['level'] === Number(selectedLevel));
+        }
         break;
       default:
         selectedSet = fullKanjiDictionary
@@ -69,15 +76,20 @@ function App() {
     setGuessMode(selectedId === 'guess-meaning' ? GuessMode.GUESS_MEANING : GuessMode.GUESS_READING);
   }
 
+  const handleQuizSetSelection = (event) => {
+    const selectedId = event.target.getAttribute('id');
+    setQuizSet(selectedId === 'kanji-set' ? QuizSet.KANJI : QuizSet.VOCABULARY);
+  }
+
   return (
     <Container fluid className='App'>
       <Row>
         <Col className='App-body'>
           {
             appState === AppState.SELECT_MODE
-              ? <SelectSettings handleGuessModeSelection={handleGuessModeSelection} handleSetSelection={handleSetSelection}
-                guessMode={guessMode} selectedLevel={selectedLevel} setSelectedLevel={setSelectedLevel} />
-              : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent} guessMode={guessMode} />
+              ? <SelectSettings handleGuessModeSelection={handleGuessModeSelection} handleQuizSetSelection={handleQuizSetSelection} handleSetSelection={handleSetSelection}
+                guessMode={guessMode} quizSet={quizSet} selectedLevel={selectedLevel} setSelectedLevel={setSelectedLevel} />
+              : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent} guessMode={guessMode} quizSet={quizSet}/>
           }
         </Col>
       </Row>
