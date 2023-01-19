@@ -42,9 +42,17 @@ button.btn-primary.select-mode-button-checked {
   border-color: #0d6efd;
 }
 
+button.start-quiz-button {
+  height: 4rem;
+}
+
 /**********/
 /* Level Select
 /**********/
+
+.level-label {
+  text-align: right;
+}
 
 #popover-basic {
   max-width: 20%;

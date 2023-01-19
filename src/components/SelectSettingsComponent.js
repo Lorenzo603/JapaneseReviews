@@ -76,16 +76,21 @@ export const SelectSettings = (props) => {
                             <Tab eventKey="level-select" title="Select Level">
                                 <RadioSelectModeComponent config={selectQuizSetOptions} />
                                 <Row className='mt-4 justify-content-center'>
-                                    <Col>
+                                    <Col className="col-4">
                                         <Form onSubmit={props.handleSetSelection} data-option={'level'}>
-                                            <Row className='align-items-center'>
-                                                <Col className='justify-content-right'>
+                                            <Row className='justify-content-center align-items-center'>
+                                                <Col className="level-label">
+                                                    Level:
+                                                </Col>
+                                                <Col>
                                                     <OverlayTrigger variant="dark" trigger="click" placement="right" rootClose="true" overlay={popover}>
                                                         <Button className='selectedLevel'>{props.selectedLevel}</Button>
                                                     </OverlayTrigger>
                                                 </Col>
-                                                <Col className='justify-content-left'>
-                                                    <Button type='submit'>Start Quiz</Button>
+                                            </Row>
+                                            <Row>
+                                                <Col className='col-12 mt-4'>
+                                                    <Button type='submit' className='start-quiz-button'>Start Quiz</Button>
                                                 </Col>
                                             </Row>
                                         </Form>
