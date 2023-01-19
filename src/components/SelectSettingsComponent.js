@@ -1,4 +1,4 @@
-import { Col, Row, Form, Button, Popover, OverlayTrigger } from 'react-bootstrap';
+import { Col, Row, Form, Button, Popover, OverlayTrigger, Tab, Tabs } from 'react-bootstrap';
 import { RadioSelectModeComponent } from './RadioSelectModeComponent';
 import { SelectionOption } from './SelectionOptionComponent';
 import { GuessMode } from '../GuessMode'
@@ -45,7 +45,7 @@ export const SelectSettings = (props) => {
     };
 
     const selectQuizSetOptions = {
-        "title": "Select Set:",
+        "title": "",
         "onClickHandler": props.handleQuizSetSelection,
         "options": [
             {
@@ -67,39 +67,48 @@ export const SelectSettings = (props) => {
                 <RadioSelectModeComponent config={selectModeOptions} />
                 <Row className='select-title'>
                     <Col>
-                        Select Level:
+                        Select Set:
                     </Col>
                 </Row>
-                <RadioSelectModeComponent config={selectQuizSetOptions} />
-                <Row className='mt-4 justify-content-center'>
-                    <Col className='col-2'>
-                        <Form onSubmit={props.handleSetSelection} data-option={'level'}>
-                            <Row className='align-items-center'>
-                                <Col className='justify-content-right'>
-                                    <OverlayTrigger variant="dark" trigger="click" placement="right" rootClose="true" overlay={popover}>
-                                        <Button className='selectedLevel'>{props.selectedLevel}</Button>
-                                    </OverlayTrigger>
-                                </Col>
-                                <Col className='justify-content-left'>
-                                    <Button type='submit'>Start Quiz</Button>
-                                </Col>
-                            </Row>
-                        </Form>
+                <Row className='justify-content-center'>
+                    <Col className='col-4'>
+                        <Tabs variant="pills" justify>
+                            <Tab eventKey="level-select" title="Select Level">
+                                <RadioSelectModeComponent config={selectQuizSetOptions} />
+                                <Row className='mt-4 justify-content-center'>
+                                    <Col>
+                                        <Form onSubmit={props.handleSetSelection} data-option={'level'}>
+                                            <Row className='align-items-center'>
+                                                <Col className='justify-content-right'>
+                                                    <OverlayTrigger variant="dark" trigger="click" placement="right" rootClose="true" overlay={popover}>
+                                                        <Button className='selectedLevel'>{props.selectedLevel}</Button>
+                                                    </OverlayTrigger>
+                                                </Col>
+                                                <Col className='justify-content-left'>
+                                                    <Button type='submit'>Start Quiz</Button>
+                                                </Col>
+                                            </Row>
+                                        </Form>
+                                    </Col>
+                                </Row>
+                            </Tab>
+                            <Tab eventKey="preconfigured-set-select" title="Preconfigured sets">
+                                <Row className='mt-4'>
+                                    <Col>
+                                        <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt5'}>JLPT N5</SelectionOption>
+                                        <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt4'}>JLPT N4</SelectionOption>
+                                        <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt3'}>JLPT N3</SelectionOption>
+                                        <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt2'}>JLPT N2</SelectionOption>
+                                        <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'full'}>Full Kanji Set</SelectionOption>
+                                        <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'full-vocab'}>Full Vocabulary Set</SelectionOption>
+                                        <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'test'}>Test</SelectionOption>
+                                    </Col>
+                                </Row>
+                            </Tab>
+                        </Tabs>
                     </Col>
                 </Row>
 
-                <Row className='select-title'>
-                    <Col>
-                        Preconfigured sets:
-                    </Col>
-                </Row>
-                <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt5'}>JLPT N5</SelectionOption>
-                <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt4'}>JLPT N4</SelectionOption>
-                <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt3'}>JLPT N3</SelectionOption>
-                <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'jlpt2'}>JLPT N2</SelectionOption>
-                <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'full'}>Full Kanji Set</SelectionOption>
-                <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'full-vocab'}>Full Vocabulary Set</SelectionOption>
-                <SelectionOption handleSetSelectionCallback={props.handleSetSelection} dataOption={'test'}>Test</SelectionOption>
             </Col>
         </Row>
     );

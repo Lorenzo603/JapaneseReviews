@@ -12,7 +12,7 @@ export const RadioSelectModeComponent = (props) => {
                     </Col>
                 </Row>
                 <Row className='justify-content-center'>
-                    <Col className='col-2'>
+                    <Col className='col-4'>
                         {
                             props.config.options.map(
                                 option => {
