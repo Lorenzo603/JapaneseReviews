@@ -4,6 +4,7 @@ import { HeaderMenu } from './HeaderMenuComponent';
 import { GuessMode } from '../GuessMode';
 import Confetti from 'react-dom-confetti';
 var wanakana = require('wanakana');
+var stringSimilarity = require("string-similarity");
 
 export const QuestionAnswerComponent = (props) => {
     const Result = {
@@ -90,21 +91,40 @@ export const QuestionAnswerComponent = (props) => {
         event.preventDefault();
         if (answerState === AnswerState.WAITING_RESPONSE) {
             const acceptedAnswers = getAcceptedAnswers(kanjiPrompt).map(answer => answer[getCurrentModeSingle()].toLowerCase());
-            if (acceptedAnswers.includes(getAnswerInputElement().value.toLowerCase())) {
+            const userAnswer = getAnswerInputElement().value.toLowerCase();
+            if (acceptedAnswers.includes(userAnswer)) {
                 setAnswerResult(Result.CORRECT);
                 setTotalCorrect(totalCorrect + 1);
+                updateAnswerCount();
             } else {
-                setAnswerResult(Result.WRONG);
-                wrongAnswers.push(kanjiPrompt);
+                const similarAnswerExists = acceptedAnswers.some((element) => {
+                    return stringSimilarity.compareTwoStrings(userAnswer, element) >= 0.75;
+                });
+                if (similarAnswerExists) {
+                    shakeInputField();
+                } else {
+                    setAnswerResult(Result.WRONG);
+                    wrongAnswers.push(kanjiPrompt);
+                    updateAnswerCount();
+                }
             }
-            setAnswerState(AnswerState.ANSWERED);
-            setTotalAnswers(totalAnswers + 1);
         } else {
             setAnswerState(AnswerState.WAITING_RESPONSE);
             getAnswerInputElement().value = "";
             updateKanjiPrompt();
         }
+    }
 
+    function updateAnswerCount() {
+        setAnswerState(AnswerState.ANSWERED);
+        setTotalAnswers(totalAnswers + 1);
+    }
+
+    function shakeInputField() {
+        const element = getAnswerInputElement();
+        element.classList.remove('shake-animation'); // reset animation
+        void element.offsetWidth; // trigger reflow
+        element.classList.add('shake-animation'); // start animation
     }
 
     function KanjiPrompt(props) {
