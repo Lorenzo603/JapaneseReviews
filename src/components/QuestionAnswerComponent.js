@@ -91,7 +91,15 @@ export const QuestionAnswerComponent = (props) => {
         event.preventDefault();
         if (answerState === AnswerState.WAITING_RESPONSE) {
             const acceptedAnswers = getAcceptedAnswers(kanjiPrompt).map(answer => answer[getCurrentModeSingle()].toLowerCase());
-            const userAnswer = getAnswerInputElement().value.toLowerCase();
+            let userAnswer = getAnswerInputElement().value.toLowerCase();
+
+            if (props.guessMode === GuessMode.GUESS_READING
+                && userAnswer.length > 0
+                && userAnswer.slice(-1) === 'n') {
+                userAnswer = userAnswer.substring(0, userAnswer.length - 1) + 'ん';
+                getAnswerInputElement().value = userAnswer;
+            }
+
             if (acceptedAnswers.includes(userAnswer)) {
                 setAnswerResult(Result.CORRECT);
                 setTotalCorrect(totalCorrect + 1);
