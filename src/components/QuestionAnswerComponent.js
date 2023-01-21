@@ -105,10 +105,13 @@ export const QuestionAnswerComponent = (props) => {
                 setTotalCorrect(totalCorrect + 1);
                 updateAnswerCount();
             } else {
+                const answerContainsRomaji = props.guessMode === GuessMode.GUESS_READING
+                    && userAnswer.length > 0
+                    && !wanakana.isKana(userAnswer);
                 const similarAnswerExists = acceptedAnswers.some((element) => {
                     return stringSimilarity.compareTwoStrings(userAnswer, element) >= 0.75;
                 });
-                if (similarAnswerExists) {
+                if (answerContainsRomaji || similarAnswerExists) {
                     shakeInputField();
                 } else {
                     setAnswerResult(Result.WRONG);
