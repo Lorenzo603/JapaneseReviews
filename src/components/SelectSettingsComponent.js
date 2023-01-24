@@ -41,6 +41,11 @@ export const SelectSettings = (props) => {
                 "label": "Guess Reading",
                 "isChecked": () => { return props.guessMode === GuessMode.GUESS_READING },
             },
+            {
+                "id": "guess-kanji",
+                "label": "Guess Kanji",
+                "isChecked": () => { return props.guessMode === GuessMode.GUESS_KANJI },
+            },
         ],
     };
 

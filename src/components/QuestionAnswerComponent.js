@@ -63,7 +63,7 @@ export const QuestionAnswerComponent = (props) => {
             updateKanjiPrompt();
             const answerInputElement = getAnswerInputElement();
             answerInputElement.focus();
-            if (props.guessMode === GuessMode.GUESS_READING) {
+            if (props.guessMode === GuessMode.GUESS_READING || props.guessMode === GuessMode.GUESS_KANJI) {
                 wanakana.bind(answerInputElement);
             }
         }
@@ -93,7 +93,7 @@ export const QuestionAnswerComponent = (props) => {
             const acceptedAnswers = getAcceptedAnswers(kanjiPrompt).map(answer => answer[getCurrentModeSingle()].toLowerCase());
             let userAnswer = getAnswerInputElement().value.toLowerCase();
 
-            if (props.guessMode === GuessMode.GUESS_READING
+            if ((props.guessMode === GuessMode.GUESS_READING || props.guessMode === GuessMode.GUESS_KANJI)
                 && userAnswer.length > 0
                 && userAnswer.slice(-1) === 'n') {
                 userAnswer = userAnswer.substring(0, userAnswer.length - 1) + 'ん';
@@ -105,7 +105,7 @@ export const QuestionAnswerComponent = (props) => {
                 setTotalCorrect(totalCorrect + 1);
                 updateAnswerCount();
             } else {
-                const answerContainsRomaji = props.guessMode === GuessMode.GUESS_READING
+                const answerContainsRomaji = (props.guessMode === GuessMode.GUESS_READING || props.guessMode === GuessMode.GUESS_KANJI)
                     && userAnswer.length > 0
                     && !wanakana.isKana(userAnswer);
                 const similarAnswerExists = acceptedAnswers.some((element) => {
@@ -139,16 +139,36 @@ export const QuestionAnswerComponent = (props) => {
     }
 
     function KanjiPrompt(props) {
-        return <p className="kanjiPrompt">{props.kanjiPrompt['data']['slug']}</p>;
+        if (props.guessMode === GuessMode.GUESS_KANJI) {
+            const acceptedMeaning = props.kanjiPrompt['data']['meanings'].filter(acceptedMeaning => acceptedMeaning.accepted_answer)[0]["meaning"];
+            return <KanjiPromptStyled promptText={acceptedMeaning} />;
+        }
+        return <KanjiPromptStyled promptText={props.kanjiPrompt['data']['slug']} />;
+    }
+
+    function KanjiPromptStyled(props) {
+        return <p className="kanjiPrompt">{props.promptText}</p>;
     }
 
     function AnswerResult(props) {
         return <div className='answer-result'>{props.currentState === AnswerState.ANSWERED ?
             props.result === Result.CORRECT
-                ? "Correct!"
-                : getAcceptedAnswers(kanjiPrompt).filter(answer => answer.primary)[0][getCurrentModeSingle()]
+                ? getSuccessText(props)
+                : getIncorrectText(props)
             : ""}
         </div>
+    }
+
+    function getSuccessText(props) {
+        return props.guessMode === GuessMode.GUESS_KANJI
+        ? kanjiPrompt['data']['slug']
+        : "Correct!";
+    }
+
+    function getIncorrectText(props) {
+        return props.guessMode === GuessMode.GUESS_KANJI
+        ? getAcceptedAnswers(kanjiPrompt).filter(answer => answer.primary)[0][getCurrentModeSingle()] + " - " + kanjiPrompt['data']['slug']
+        : getAcceptedAnswers(kanjiPrompt).filter(answer => answer.primary)[0][getCurrentModeSingle()]
     }
 
     function WrongAnswersRecap() {
@@ -207,7 +227,7 @@ export const QuestionAnswerComponent = (props) => {
                     <Col className='App-body'>
                         <Row>
                             <Col>
-                                {kanjiPrompt && <KanjiPrompt kanjiPrompt={kanjiPrompt} />}
+                                {kanjiPrompt && <KanjiPrompt kanjiPrompt={kanjiPrompt} guessMode={props.guessMode} />}
                             </Col>
                         </Row>
                         {answerState !== AnswerState.FINISHED && (
@@ -222,7 +242,7 @@ export const QuestionAnswerComponent = (props) => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <AnswerResult currentState={answerState} result={answerResult} />
+                                        <AnswerResult currentState={answerState} result={answerResult} guessMode={props.guessMode}/>
                                     </Col>
                                 </Row>
                             </>

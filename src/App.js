@@ -50,10 +50,10 @@ function App() {
       case "level":
         if (quizSet === QuizSet.KANJI) {
           selectedSet = fullKanjiDictionary
-          .filter(kanji => kanji['data']['level'] === Number(selectedLevel));
+            .filter(kanji => kanji['data']['level'] === Number(selectedLevel));
         } else {
           selectedSet = fullVocabularyDictionary
-          .filter(vocab => vocab['data']['level'] === Number(selectedLevel));
+            .filter(vocab => vocab['data']['level'] === Number(selectedLevel));
         }
         break;
       default:
@@ -71,9 +71,15 @@ function App() {
     setAppState(AppState.SELECT_MODE);
   }
 
+  const guessModeMap = {
+    "guess-meaning": GuessMode.GUESS_MEANING,
+    "guess-reading": GuessMode.GUESS_READING,
+    "guess-kanji": GuessMode.GUESS_KANJI,
+  }
+
   const handleGuessModeSelection = (event) => {
     const selectedId = event.target.getAttribute('id');
-    setGuessMode(selectedId === 'guess-meaning' ? GuessMode.GUESS_MEANING : GuessMode.GUESS_READING);
+    setGuessMode(guessModeMap[selectedId]);
   }
 
   const handleQuizSetSelection = (event) => {
@@ -89,7 +95,7 @@ function App() {
             appState === AppState.SELECT_MODE
               ? <SelectSettings handleGuessModeSelection={handleGuessModeSelection} handleQuizSetSelection={handleQuizSetSelection} handleSetSelection={handleSetSelection}
                 guessMode={guessMode} quizSet={quizSet} selectedLevel={selectedLevel} setSelectedLevel={setSelectedLevel} />
-              : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent} guessMode={guessMode} quizSet={quizSet}/>
+              : <QuestionAnswerComponent kanjis={kanjiSet} resetHandler={handleResetEvent} guessMode={guessMode} quizSet={quizSet} />
           }
         </Col>
       </Row>
