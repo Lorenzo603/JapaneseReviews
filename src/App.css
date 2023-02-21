@@ -149,6 +149,7 @@ button.start-quiz-button {
 }
 
 .wrongAnswerRecap {
+  list-style-type: none;
   font-family: "Hiragino Kaku Gothic Pro";
 }
 

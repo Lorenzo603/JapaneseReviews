@@ -175,7 +175,7 @@ export const QuestionAnswerComponent = (props) => {
         return (
             <ul className='wrongAnswerRecap'>
                 {wrongAnswers.map(wrongAnswer =>
-                    <li key={wrongAnswer['id']}>{wrongAnswer['data']['slug']}:
+                    <li key={wrongAnswer['id']}>{wrongAnswer['data']['slug']}&nbsp;:&nbsp;
                         {getAcceptedAnswers(wrongAnswer).map(answer => answer[getCurrentModeSingle()]).join(', ')}</li>
                 )}
             </ul>
