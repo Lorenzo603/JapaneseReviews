@@ -15,7 +15,7 @@ export const SelectSettings = (props) => {
         <Popover id="popover-basic">
             <Popover.Body>
                 <Row>
-                    {Array.from({ length: 60 }, (_, i) => i + 1).map(index => {
+                    {Array.from({ length: 61 }, (_, i) => i + 1).map(index => {
                         return (
                             <Col key={'level-number-' + index} className='col-2 level-number'>
                                 <Button onClick={() => { handleLevelNumberClick(index); }}>{index}</Button>
